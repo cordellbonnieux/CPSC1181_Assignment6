@@ -23,7 +23,12 @@ import javafx.stage.Stage;
  */
 public class MessengerGUI extends Application {
 	/*
-	 * main ui data members
+	 * Logic data
+	 */
+	private ArrayList<String> userList;
+	private String currentUser;
+	/*
+	 * main ui
 	 */
 	private final double WIDTH = 600;
 	private final double HEIGHT = 450;
@@ -73,13 +78,20 @@ public class MessengerGUI extends Application {
 	 */
 	public void start(Stage stage) {
 		
+		// build the GUI
 		buildUI(stage);
 		buildTabOne();
 		buildTabTwo();
 		buildTabThree();
 		
-		// attach events
+		// attach event listeners
+		tabOneEvents();
 		
+		
+		// data for testing
+		currentUser = "A";
+		userList.add(currentUser);
+		userList.add("B");
 	}
 	
 	/**
@@ -156,6 +168,29 @@ public class MessengerGUI extends Application {
 		tabThreeContainer = new VBox(tabThreeTop, messageArea, tabThreeBottom);
 		tabThree.setContent(tabThreeContainer);
 		tabContainer.getTabs().add(tabThree);
+	}
+	
+	/**
+	 * Tab One Events
+	 * Adds event listeners to tab one elements
+	 */
+	public void tabOneEvents() {
+		userList = new ArrayList<String>();
+		selectUserName.setOnAction(e -> { 
+			boolean found = false;
+			for (int i = 0; i < userList.size(); i++) {
+				if (enterUserNameField.getText().trim().length() > 0) {
+					if (enterUserNameField.getText().trim().equals(userList.get(i))) {
+						currentUser = enterUserNameField.getText().trim();
+						topText.setText("Current user: " + currentUser);
+						found = true;
+						enterUserNameField.setText("");
+					} else if (i == userList.size() - 1 && !found) {
+						topText.setText("Incorrect Username");
+					}
+				}
+			}
+		});
 	}
 	
 	public static void main(String[] args) {
