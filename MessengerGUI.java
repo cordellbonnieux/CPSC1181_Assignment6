@@ -25,7 +25,7 @@ public class MessengerGUI extends Application {
 	/*
 	 * Logic data
 	 */
-	private ArrayList<String> userList;
+	private Messenger messenger;
 	private String currentUser;
 	/*
 	 * main ui
@@ -84,14 +84,21 @@ public class MessengerGUI extends Application {
 		buildTabTwo();
 		buildTabThree();
 		
+		// set up user logic
+		messenger = new Messenger();
+		
 		// attach event listeners
 		tabOneEvents();
+		tabTwoEvents();
 		
 		
-		// data for testing
-		currentUser = "A";
-		userList.add(currentUser);
-		userList.add("B");
+		// sample data for testing
+		//currentUser = "A";
+		//userList.add(currentUser);
+		//userList.add("B");
+		messenger.addUser("A");
+		messenger.addUser("B");
+		
 	}
 	
 	/**
@@ -135,7 +142,8 @@ public class MessengerGUI extends Application {
 	public void buildTabTwo() {
 		tabTwo = new Tab("Read Messages");
 		tabTwo.setClosable(false);
-		messageDisplay = new TextArea("No Messages Displayed"); //make this uneditable
+		messageDisplay = new TextArea("No Messages Displayed");
+		messageDisplay.setEditable(false);
 		nextMessage = new Button("Next");
 		tabTwoTop = new HBox(messageDisplay, nextMessage);
 		loadAllMessages = new Button("Load All Messages");
@@ -175,22 +183,29 @@ public class MessengerGUI extends Application {
 	 * Adds event listeners to tab one elements
 	 */
 	public void tabOneEvents() {
-		userList = new ArrayList<String>();
 		selectUserName.setOnAction(e -> { 
 			boolean found = false;
-			for (int i = 0; i < userList.size(); i++) {
+			for (int i = 0; i < messenger.getUsers().size(); i++) {
 				if (enterUserNameField.getText().trim().length() > 0) {
-					if (enterUserNameField.getText().trim().equals(userList.get(i))) {
+					if (enterUserNameField.getText().trim().equals(messenger.getUsers().get(i))) {
 						currentUser = enterUserNameField.getText().trim();
 						topText.setText("Current user: " + currentUser);
 						found = true;
 						enterUserNameField.setText("");
-					} else if (i == userList.size() - 1 && !found) {
+					} else if (i == messenger.getUsers().size() - 1 && !found) {
 						topText.setText("Incorrect Username");
 					}
 				}
 			}
 		});
+	}
+	
+	/**
+	 * Tab Two Events
+	 * Adds event listeners to tab two elements
+	 */
+	public void tabTwoEvents() {
+		
 	}
 	
 	public static void main(String[] args) {
