@@ -1,5 +1,7 @@
 import java.util.*;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -31,8 +33,8 @@ public class MessengerGUI extends Application {
 	/*
 	 * main ui
 	 */
-	private final double WIDTH = 600;
-	private final double HEIGHT = 450;
+	private final double WIDTH = 450;
+	private final double HEIGHT = 350;
 	private BorderPane root;
 	private Scene scene;
 	private VBox mainContainer;
@@ -105,6 +107,8 @@ public class MessengerGUI extends Application {
 		topText = new Text("Select A User");
 		tabContainer = new TabPane();
 		mainContainer = new VBox(topText, tabContainer);
+		topText.setStyle("-fx-font-size:1.3em;");
+		mainContainer.setAlignment(Pos.TOP_CENTER);
 		root.setCenter(mainContainer);
 		root.setPrefSize(WIDTH, HEIGHT);
 		stage.setResizable(false);
@@ -120,10 +124,14 @@ public class MessengerGUI extends Application {
 	public void buildTabOne() {
 		tabOne = new Tab("Choose User");
 		tabOne.setClosable(false);
-		enterUserName = new Text("Enter Username:");
+		enterUserName = new Text("Enter Username: ");
 		enterUserNameField = new TextField();
+		enterUserNameField.setPadding(new Insets(7));
 		selectUserName = new Button("Select");
-		tabOneContainer = new HBox(enterUserName, enterUserNameField, selectUserName);
+		selectUserName.setPadding(new Insets(7));
+		tabOneContainer = new HBox(5,enterUserName, enterUserNameField, selectUserName);
+		tabOneContainer.setPadding(new Insets(5));
+		tabOneContainer.setAlignment(Pos.CENTER);
 		tabOne.setContent(tabOneContainer);
 		tabContainer.getTabs().add(tabOne);
 	}
@@ -137,12 +145,21 @@ public class MessengerGUI extends Application {
 		tabTwo.setClosable(false);
 		messageDisplay = new TextArea("No Messages Displayed");
 		messageDisplay.setEditable(false);
+		messageDisplay.setPrefHeight(255);
+		HBox.setMargin(messageDisplay, new Insets(3));
 		nextMessage = new Button("Next");
+		nextMessage.setPadding(new Insets(7));
+		nextMessage.setPrefWidth(215);
 		tabTwoTop = new HBox(messageDisplay, nextMessage);
 		loadAllMessages = new Button("Load All Messages");
+		loadAllMessages.setPadding(new Insets(7));
 		loadUnreadMessages = new Button("Load Unread Messages");
-		tabTwoBottom = new HBox(loadAllMessages, loadUnreadMessages);
+		loadUnreadMessages.setPadding(new Insets(7));
+		tabTwoBottom = new HBox(5,loadAllMessages, loadUnreadMessages);
 		tabTwoContainer = new VBox(tabTwoTop, tabTwoBottom);
+		tabTwoTop.setAlignment(Pos.CENTER);
+		tabTwoBottom.setAlignment(Pos.CENTER);
+		tabTwoContainer.setPadding(new Insets(5));
 		tabTwo.setContent(tabTwoContainer);
 		tabContainer.getTabs().add(tabTwo);
 	}
@@ -156,17 +173,24 @@ public class MessengerGUI extends Application {
 		tabThree.setClosable(false);
 		recipientFieldLabel = new Text("To:");
 		recipientField = new TextField();
-		tabThreeTop = new HBox(recipientFieldLabel, recipientField);
+		tabThreeTop = new HBox(3,recipientFieldLabel, recipientField);
+		tabThreeTop.setAlignment(Pos.CENTER_LEFT);
 		messageArea = new TextArea();
 		messageType = new Text("Message Type");
+		messageArea.setPrefHeight(255);
 		smileOrWritten = new ToggleGroup();
 		smile = new RadioButton("Smile");
 		written = new RadioButton("Written");
 		send = new Button("Send");
+		send.setPadding(new Insets(7));
 		smile.setToggleGroup(smileOrWritten);
 		written.setToggleGroup(smileOrWritten);
-		tabThreeBottom = new HBox(messageType, smile, written, send);
+		tabThreeBottom = new HBox(5,messageType, smile, written, send);
+		tabThreeBottom.setAlignment(Pos.CENTER);
+		HBox.setMargin(send, new Insets(0, 30, 0, 20));
 		tabThreeContainer = new VBox(tabThreeTop, messageArea, tabThreeBottom);
+		VBox.setMargin(messageArea, new Insets(3));
+		tabThreeContainer.setPadding(new Insets(3));
 		tabThree.setContent(tabThreeContainer);
 		tabContainer.getTabs().add(tabThree);
 	}
