@@ -1,5 +1,4 @@
 import java.util.*;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,6 +26,7 @@ public class MessengerGUI extends Application {
 	 */
 	private Messenger messenger;
 	private String currentUser;
+	private int pageCounter;
 	/*
 	 * main ui
 	 */
@@ -205,6 +205,26 @@ public class MessengerGUI extends Application {
 	 * Adds event listeners to tab two elements
 	 */
 	public void tabTwoEvents() {
+		loadAllMessages.setOnAction(e -> {
+			if (currentUser != null) {
+				if (messenger.getReceivedMessages(currentUser).size() > 0) {
+					messageDisplay.setText(messenger.getReceivedMessages(currentUser).get(0).getText());
+					pageCounter = 0;
+				} else {
+					messageDisplay.setText("No Messages To Display");
+				}
+			}
+		});
+		loadUnreadMessages.setOnAction(e -> {
+			if (currentUser != null) {
+				if (messenger.getReceivedMessages(currentUser).size() > 0) {
+					messageDisplay.setText(messenger.getReceivedMessages(currentUser, Message.Status.UNREAD).get(0).getText());
+					pageCounter = 0;
+				} else {
+					messageDisplay.setText("No Messages To Display");
+				}
+			}
+		});
 		
 	}
 	
