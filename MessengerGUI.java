@@ -22,11 +22,12 @@ import javafx.stage.Stage;
  */
 public class MessengerGUI extends Application {
 	/*
-	 * Logic data
+	 * Logic data members
 	 */
-	private Messenger messenger;
+	private Messenger messenger = new Messenger();
 	private String currentUser;
 	private int pageCounter;
+	private ArrayList<Message> currentMessages;
 	/*
 	 * main ui
 	 */
@@ -66,8 +67,8 @@ public class MessengerGUI extends Application {
 	private Text recipientFieldLabel;
 	private TextField recipientField;
 	private TextArea messageArea;
-	private Text messageType = new Text("Message Type");
-	private ToggleGroup smileOrWritten = new ToggleGroup();
+	private Text messageType;
+	private ToggleGroup smileOrWritten;
 	private RadioButton smile;
 	private RadioButton written;
 	private Button send;
@@ -77,28 +78,20 @@ public class MessengerGUI extends Application {
 	 * @param stage Stage
 	 */
 	public void start(Stage stage) {
-		
 		// build the GUI
 		buildUI(stage);
 		buildTabOne();
 		buildTabTwo();
 		buildTabThree();
 		
-		// set up user logic
-		messenger = new Messenger();
-		
 		// attach event listeners
 		tabOneEvents();
 		tabTwoEvents();
+		tabThreeEvents();
 		
-		
-		// sample data for testing
-		//currentUser = "A";
-		//userList.add(currentUser);
-		//userList.add("B");
+		// added sample data as shown in example video
 		messenger.addUser("A");
 		messenger.addUser("B");
-		
 	}
 	
 	/**
@@ -207,25 +200,81 @@ public class MessengerGUI extends Application {
 	public void tabTwoEvents() {
 		loadAllMessages.setOnAction(e -> {
 			if (currentUser != null) {
-				if (messenger.getReceivedMessages(currentUser).size() > 0) {
-					messageDisplay.setText(messenger.getReceivedMessages(currentUser).get(0).getText());
-					pageCounter = 0;
-				} else {
-					messageDisplay.setText("No Messages To Display");
+				try {
+					currentMessages = messenger.getReceivedMessages(currentUser);
+					if (currentMessages.size() > 0) {
+						messageDisplay.setText(currentMessages.get(0).toString());
+						pageCounter = 0;
+					} else {
+						messageDisplay.setText("No Messages To Display");
+					}
+				} catch (NullPointerException err) {
+					System.out.println(err.getMessage());
+				} catch (IllegalArgumentException err) {
+					System.out.println(err.getMessage());
 				}
 			}
 		});
 		loadUnreadMessages.setOnAction(e -> {
 			if (currentUser != null) {
-				if (messenger.getReceivedMessages(currentUser).size() > 0) {
-					messageDisplay.setText(messenger.getReceivedMessages(currentUser, Message.Status.UNREAD).get(0).getText());
-					pageCounter = 0;
-				} else {
-					messageDisplay.setText("No Messages To Display");
+				try {
+					currentMessages = messenger.getReceivedMessages(currentUser, Message.Status.UNREAD);
+					if (currentMessages.size() > 0) {
+						messageDisplay.setText(currentMessages.get(0).toString());
+						pageCounter = 0;
+					} else {
+						messageDisplay.setText("No Messages To Display");
+					}
+				} catch (NullPointerException err) {
+					System.out.println(err.getMessage());
+				} catch (IllegalArgumentException err) {
+					System.out.println(err.getMessage());
 				}
 			}
 		});
-		
+		nextMessage.setOnAction(e -> {
+			if (currentUser != null && currentMessages != null) {
+				if (pageCounter < currentMessages.size() - 1) {
+					messageDisplay.setText(currentMessages.get(++pageCounter).toString());
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Tab Three Events
+	 * Adds event listeners to tab three elements
+	 */
+	public void tabThreeEvents() {
+		send.setOnAction(e -> {
+			if (currentUser != null) {
+				try {
+					if (messenger.getUsers().contains(recipientField.getText().trim())) {
+						if (written.isSelected()) {
+							messenger.sendMessage(currentUser, recipientField.getText().trim(), messageArea.getText());
+							messageArea.setText("");
+							recipientField.setText("");
+						} else if (smile.isSelected()) {
+							messenger.sendSmile(currentUser, recipientField.getText().trim());
+							messageArea.setText("");
+							recipientField.setText("");
+						} else {
+							System.out.println("something went wrong");
+						}
+					}
+				} catch (NullPointerException err) {
+					System.out.println(err.getMessage());
+				} catch (IllegalArgumentException err) {
+					System.out.println(err.getMessage());
+				}
+			}
+		});
+		smile.setOnAction(e -> {
+			messageArea.setEditable(false);
+		});
+		written.setOnAction(e -> {
+			messageArea.setEditable(true);
+		});
 	}
 	
 	public static void main(String[] args) {
