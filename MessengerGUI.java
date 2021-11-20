@@ -1,6 +1,7 @@
 import java.util.*;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -18,15 +19,19 @@ public class MessengerGUI extends Application {
 	/*
 	 * 
 	 */
+	private final double WIDTH = 600;
+	private final double HEIGHT = 450;
 	private BorderPane root;
-	private TabPane container;
-	private Text topMessage;
+	private Scene scene;
+	private VBox mainContainer;
+	private TabPane tabContainer;
+	private Text topText;
 	/*
 	 * tab one
 	 */
 	private Tab tabOne;
 	private HBox tabOneContainer;
-	private Text enterUserName
+	private Text enterUserName;
 	private TextField enterUserNameField;
 	private Button selectUserName;
 	/*
@@ -56,27 +61,51 @@ public class MessengerGUI extends Application {
 	
 	public void start(Stage stage) {
 		
-		buildUI();
+		buildUI(stage);
 		buildTabOne();
 		buildTabTwo();
 		buildTabThree();
 		
-	}
-	
-	public static void buildUI() {
+		// attach events
 		
 	}
 	
-	public static void buildTabOne() {
+	public void buildUI(Stage stage) {
+		root = new BorderPane();
+		scene = new Scene(root);
+		topText = new Text("Select A User");
+		tabContainer = new TabPane();
+		mainContainer = new VBox(topText, tabContainer);
+		root.setCenter(mainContainer);
+		root.setPrefSize(WIDTH, HEIGHT);
+		stage.setResizable(false);
+		stage.setScene(scene);
+		stage.setTitle("MessengerGUI");
+		stage.show();
+	}
+	
+	public void buildTabOne() {
+		tabOne = new Tab("Choose User");
+		tabOne.setClosable(false);
+		enterUserName = new Text("Enter Username:");
+		enterUserNameField = new TextField();
+		selectUserName = new Button("Select");
+		tabOneContainer = new HBox(enterUserName, enterUserNameField, selectUserName);
+		tabOne.setContent(tabOneContainer);
+		// disable x-ing out of tabs
+		tabContainer.getTabs().add(tabOne);
+	}
+	
+	public void buildTabTwo() {
 		
 	}
 	
-	public static void buildTabTwo() {
+	public void buildTabThree() {
 		
 	}
 	
-	public static void buildTabThree() {
-		
+	public static void main(String[] args) {
+		Application.launch(args);
 	}
 
 }
