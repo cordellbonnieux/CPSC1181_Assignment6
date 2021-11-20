@@ -50,13 +50,16 @@ public class MessengerGUI extends Application {
 	 */
 	private Tab tabThree;
 	private VBox tabThreeContainer;
+	private HBox tabThreeTop;
 	private HBox tabThreeBottom;
+	private Text recipientFieldLabel;
 	private TextField recipientField;
 	private TextArea messageArea;
 	private Text messageType = new Text("Message Type");
 	private ToggleGroup smileOrWritten = new ToggleGroup();
 	private RadioButton smile;
 	private RadioButton written;
+	private Button send;
 	
 	
 	public void start(Stage stage) {
@@ -110,7 +113,23 @@ public class MessengerGUI extends Application {
 	}
 	
 	public void buildTabThree() {
-		
+		tabThree = new Tab("Send Message");
+		tabThree.setClosable(false);
+		recipientFieldLabel = new Text("To:");
+		recipientField = new TextField();
+		tabThreeTop = new HBox(recipientFieldLabel, recipientField);
+		messageArea = new TextArea();
+		messageType = new Text("Message Type");
+		smileOrWritten = new ToggleGroup();
+		smile = new RadioButton("Smile");
+		written = new RadioButton("Written");
+		send = new Button("Send");
+		smile.setToggleGroup(smileOrWritten);
+		written.setToggleGroup(smileOrWritten);
+		tabThreeBottom = new HBox(messageType, smile, written, send);
+		tabThreeContainer = new VBox(tabThreeTop, messageArea, tabThreeBottom);
+		tabThree.setContent(tabThreeContainer);
+		tabContainer.getTabs().add(tabThree);
 	}
 	
 	public static void main(String[] args) {
