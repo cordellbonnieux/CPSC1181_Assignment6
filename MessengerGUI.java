@@ -14,10 +14,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+/**
+ * MessengerGUI
+ * This program allows the user to send and recieve messages from a graphical user interface
+ * @author Cordell Bonnieux
+ * @since November 2021
+ *
+ */
 public class MessengerGUI extends Application {
 	/*
-	 * 
+	 * main ui data members
 	 */
 	private final double WIDTH = 600;
 	private final double HEIGHT = 450;
@@ -61,7 +67,10 @@ public class MessengerGUI extends Application {
 	private RadioButton written;
 	private Button send;
 	
-	
+	/**
+	 * Start the program
+	 * @param stage Stage
+	 */
 	public void start(Stage stage) {
 		
 		buildUI(stage);
@@ -73,6 +82,11 @@ public class MessengerGUI extends Application {
 		
 	}
 	
+	/**
+	 * Build UI
+	 * Sets up boiler plate code and UI container
+	 * @param stage
+	 */
 	public void buildUI(Stage stage) {
 		root = new BorderPane();
 		scene = new Scene(root);
@@ -87,6 +101,10 @@ public class MessengerGUI extends Application {
 		stage.show();
 	}
 	
+	/**
+	 * Build Tab One
+	 * Sets up the UI elements for tab one
+	 */
 	public void buildTabOne() {
 		tabOne = new Tab("Choose User");
 		tabOne.setClosable(false);
@@ -98,6 +116,10 @@ public class MessengerGUI extends Application {
 		tabContainer.getTabs().add(tabOne);
 	}
 	
+	/**
+	 * Build Tab Two
+	 * Sets up the ui elements for tab two
+	 */
 	public void buildTabTwo() {
 		tabTwo = new Tab("Read Messages");
 		tabTwo.setClosable(false);
@@ -112,6 +134,10 @@ public class MessengerGUI extends Application {
 		tabContainer.getTabs().add(tabTwo);
 	}
 	
+	/**
+	 * Build Tab Three
+	 * Sets up the ui elements for tab three
+	 */
 	public void buildTabThree() {
 		tabThree = new Tab("Send Message");
 		tabThree.setClosable(false);
