@@ -43,8 +43,8 @@ public class MessengerGUI extends Application {
 	private HBox tabTwoBottom;
 	private TextArea messageDisplay;
 	private Button nextMessage;
-	private Button loadAllMessages = new Button("Load All Messages");
-	private Button loadUnreadMessages = new Button("Load Unread Messages");
+	private Button loadAllMessages;
+	private Button loadUnreadMessages;
 	/*
 	 * tab three
 	 */
@@ -92,12 +92,21 @@ public class MessengerGUI extends Application {
 		selectUserName = new Button("Select");
 		tabOneContainer = new HBox(enterUserName, enterUserNameField, selectUserName);
 		tabOne.setContent(tabOneContainer);
-		// disable x-ing out of tabs
 		tabContainer.getTabs().add(tabOne);
 	}
 	
 	public void buildTabTwo() {
-		
+		tabTwo = new Tab("Read Messages");
+		tabTwo.setClosable(false);
+		messageDisplay = new TextArea("No Messages Displayed"); //make this uneditable
+		nextMessage = new Button("Next");
+		tabTwoTop = new HBox(messageDisplay, nextMessage);
+		loadAllMessages = new Button("Load All Messages");
+		loadUnreadMessages = new Button("Load Unread Messages");
+		tabTwoBottom = new HBox(loadAllMessages, loadUnreadMessages);
+		tabTwoContainer = new VBox(tabTwoTop, tabTwoBottom);
+		tabTwo.setContent(tabTwoContainer);
+		tabContainer.getTabs().add(tabTwo);
 	}
 	
 	public void buildTabThree() {
