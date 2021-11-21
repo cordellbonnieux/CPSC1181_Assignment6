@@ -179,12 +179,13 @@ public class MessengerGUI extends Application {
 		recipientFieldLabel = new Text("To:");
 		recipientField = new TextField();
 		recipientField.setFont(font);
+		recipientField.setPrefHeight(20);
 		tabThreeTop = new HBox(3,recipientFieldLabel, recipientField);
 		tabThreeTop.setAlignment(Pos.CENTER_LEFT);
 		messageArea = new TextArea();
 		messageArea.setFont(font);
-		messageType = new Text("Message Type");
 		messageArea.setPrefHeight((HEIGHT/3)*2);
+		messageType = new Text("Message Type");
 		smileOrWritten = new ToggleGroup();
 		smile = new RadioButton("Smile");
 		written = new RadioButton("Written");
