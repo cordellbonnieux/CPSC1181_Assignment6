@@ -13,6 +13,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 /**
@@ -30,6 +31,7 @@ public class MessengerGUI extends Application {
 	private String currentUser;
 	private int pageCounter;
 	private ArrayList<Message> currentMessages;
+	private Font font = new Font("Monospaced", 12);
 	/*
 	 * main ui
 	 */
@@ -91,7 +93,7 @@ public class MessengerGUI extends Application {
 		tabTwoEvents();
 		tabThreeEvents();
 		
-		// added sample data as shown in example video
+		// added sample users as shown in example video
 		messenger.addUser("A");
 		messenger.addUser("B");
 	}
@@ -126,6 +128,7 @@ public class MessengerGUI extends Application {
 		tabOne.setClosable(false);
 		enterUserName = new Text("Enter Username: ");
 		enterUserNameField = new TextField();
+		enterUserNameField.setFont(font);
 		enterUserNameField.setPadding(new Insets(7));
 		selectUserName = new Button("Select");
 		selectUserName.setPadding(new Insets(7));
@@ -146,8 +149,10 @@ public class MessengerGUI extends Application {
 		messageDisplay = new TextArea("No Messages Displayed");
 		messageDisplay.setEditable(false);
 		messageDisplay.setPrefHeight(255);
+		messageDisplay.setFont(font);
 		HBox.setMargin(messageDisplay, new Insets(3));
 		nextMessage = new Button("Next");
+		nextMessage.setDisable(true);
 		nextMessage.setPadding(new Insets(7));
 		nextMessage.setPrefWidth(215);
 		tabTwoTop = new HBox(messageDisplay, nextMessage);
@@ -173,23 +178,25 @@ public class MessengerGUI extends Application {
 		tabThree.setClosable(false);
 		recipientFieldLabel = new Text("To:");
 		recipientField = new TextField();
+		recipientField.setFont(font);
 		tabThreeTop = new HBox(3,recipientFieldLabel, recipientField);
 		tabThreeTop.setAlignment(Pos.CENTER_LEFT);
 		messageArea = new TextArea();
+		messageArea.setFont(font);
 		messageType = new Text("Message Type");
-		messageArea.setPrefHeight(255);
+		messageArea.setPrefHeight((HEIGHT/3)*2);
 		smileOrWritten = new ToggleGroup();
 		smile = new RadioButton("Smile");
 		written = new RadioButton("Written");
 		send = new Button("Send");
 		send.setPadding(new Insets(7));
+		send.setDisable(true);
 		smile.setToggleGroup(smileOrWritten);
 		written.setToggleGroup(smileOrWritten);
 		tabThreeBottom = new HBox(5,messageType, smile, written, send);
-		tabThreeBottom.setAlignment(Pos.CENTER);
-		HBox.setMargin(send, new Insets(0, 30, 0, 20));
-		tabThreeContainer = new VBox(tabThreeTop, messageArea, tabThreeBottom);
-		VBox.setMargin(messageArea, new Insets(3));
+		tabThreeBottom.setAlignment(Pos.BASELINE_CENTER);
+		HBox.setMargin(send, new Insets(5, 30, 0, 20));
+		tabThreeContainer = new VBox(5,tabThreeTop, messageArea, tabThreeBottom);
 		tabThreeContainer.setPadding(new Insets(3));
 		tabThree.setContent(tabThreeContainer);
 		tabContainer.getTabs().add(tabThree);
@@ -229,6 +236,9 @@ public class MessengerGUI extends Application {
 					if (currentMessages.size() > 0) {
 						messageDisplay.setText(currentMessages.get(0).toString());
 						pageCounter = 0;
+						if (currentMessages.size() > 1) {
+							nextMessage.setDisable(false);
+						}
 					} else {
 						messageDisplay.setText("No Messages To Display");
 					}
@@ -246,6 +256,9 @@ public class MessengerGUI extends Application {
 					if (currentMessages.size() > 0) {
 						messageDisplay.setText(currentMessages.get(0).toString());
 						pageCounter = 0;
+						if (currentMessages.size() > 1) {
+							nextMessage.setDisable(false);
+						}
 					} else {
 						messageDisplay.setText("No Messages To Display");
 					}
@@ -260,6 +273,11 @@ public class MessengerGUI extends Application {
 			if (currentUser != null && currentMessages != null) {
 				if (pageCounter < currentMessages.size() - 1) {
 					messageDisplay.setText(currentMessages.get(++pageCounter).toString());
+					if (currentMessages.size() - 1 > pageCounter) {
+						nextMessage.setDisable(false);
+					} else {
+						nextMessage.setDisable(true);
+					}
 				}
 			}
 		});
@@ -270,6 +288,17 @@ public class MessengerGUI extends Application {
 	 * Adds event listeners to tab three elements
 	 */
 	public void tabThreeEvents() {
+		recipientField.setOnKeyReleased(e -> {
+			if (currentUser != null ) {
+				if (smile.isSelected() || written.isSelected()) {
+					if (recipientField.getText().length() > 0){
+						send.setDisable(false);
+					} else {
+						send.setDisable(true);
+					}
+				}
+			}
+		});
 		send.setOnAction(e -> {
 			if (currentUser != null) {
 				try {
@@ -294,10 +323,25 @@ public class MessengerGUI extends Application {
 			}
 		});
 		smile.setOnAction(e -> {
-			messageArea.setEditable(false);
+			if (currentUser != null ) {
+				messageArea.setEditable(false);
+				messageArea.setText("");
+				if (recipientField.getText().length() < 1) {
+					send.setDisable(true);
+				} else {
+					send.setDisable(false);
+				}
+			}
 		});
 		written.setOnAction(e -> {
-			messageArea.setEditable(true);
+			if (currentUser != null) {
+				messageArea.setEditable(true);
+				if (recipientField.getText().length() < 1) {
+					send.setDisable(true);
+				} else {
+					send.setDisable(false);
+				}
+			}
 		});
 	}
 	
