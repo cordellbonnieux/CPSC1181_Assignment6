@@ -18,7 +18,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 /**
  * MessengerGUI
- * This program allows the user to send and recieve messages from a graphical user interface
+ * This program allows the user to send and receive messages from a graphical user interface
  * @author Cordell Bonnieux
  * @since November 2021
  *
@@ -179,7 +179,8 @@ public class MessengerGUI extends Application {
 		recipientFieldLabel = new Text("To:");
 		recipientField = new TextField();
 		recipientField.setFont(font);
-		recipientField.setPrefHeight(20);
+		//recipientField.setPrefHeight(20);
+		recipientField.setPadding(new Insets(7));
 		tabThreeTop = new HBox(3,recipientFieldLabel, recipientField);
 		tabThreeTop.setAlignment(Pos.CENTER_LEFT);
 		messageArea = new TextArea();
@@ -237,6 +238,7 @@ public class MessengerGUI extends Application {
 					if (currentMessages.size() > 0) {
 						messageDisplay.setText(currentMessages.get(0).toString());
 						pageCounter = 0;
+						topText.setText("Loaded All Of " + currentUser + "'s Messages");
 						if (currentMessages.size() > 1) {
 							nextMessage.setDisable(false);
 						}
@@ -257,6 +259,7 @@ public class MessengerGUI extends Application {
 					if (currentMessages.size() > 0) {
 						messageDisplay.setText(currentMessages.get(0).toString());
 						pageCounter = 0;
+						topText.setText("Loaded " + currentUser + "'s Unread Messages");
 						if (currentMessages.size() > 1) {
 							nextMessage.setDisable(false);
 						}
@@ -300,21 +303,34 @@ public class MessengerGUI extends Application {
 				}
 			}
 		});
+		messageArea.setOnKeyReleased(e -> {
+			if (currentUser != null) {
+				if (smile.isSelected() || written.isSelected()) {
+					if (recipientField.getText().length() > 0){
+						send.setDisable(false);
+					} else {
+						send.setDisable(true);
+					}
+				}
+			}
+		});
 		send.setOnAction(e -> {
 			if (currentUser != null) {
 				try {
 					if (messenger.getUsers().contains(recipientField.getText().trim())) {
 						if (written.isSelected()) {
 							messenger.sendMessage(currentUser, recipientField.getText().trim(), messageArea.getText());
+							topText.setText("Message sent to " + recipientField.getText().trim());
 							messageArea.setText("");
 							recipientField.setText("");
 						} else if (smile.isSelected()) {
 							messenger.sendSmile(currentUser, recipientField.getText().trim());
+							topText.setText("Smile sent to " + recipientField.getText().trim());
 							messageArea.setText("");
 							recipientField.setText("");
-						} else {
-							System.out.println("something went wrong");
 						}
+					} else {
+						topText.setText("Username Not Found");
 					}
 				} catch (NullPointerException err) {
 					System.out.println(err.getMessage());
